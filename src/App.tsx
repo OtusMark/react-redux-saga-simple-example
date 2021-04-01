@@ -1,26 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useDispatch, useSelector} from "react-redux";
+import {asyncDecrementAC, asyncIncrementAC, decrementAC} from "./redux/reducers/countReducer";
+import {RootStateType} from "./redux/store";
+import {asyncSetUser, UserType} from "./redux/reducers/usersReducer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export const App = () => {
+    const count = useSelector<RootStateType, number>(state => state.countReducer.count)
+    const users = useSelector<RootStateType, Array<UserType>>(state => state.usersReducer.users)
+    const dispatch = useDispatch()
+
+    return (
+        <div>
+            <div>{count}</div>
+            <div>
+                <button onClick={() => dispatch(asyncIncrementAC())}>Increment</button>
+                <button onClick={() => dispatch(asyncDecrementAC())}>Decrement</button>
+                <button onClick={() => dispatch(asyncSetUser())}>Get users</button>
+            </div>
+            <div>
+                {users.map(user => (
+                    <div>
+                        {user.name}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
 }
-
-export default App;
